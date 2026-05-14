@@ -1,4 +1,11 @@
 terraform {
+
+backend "s3" {
+    bucket = "lance-cicd-terraform-state"
+    key    = "terraform.tfstate"
+    region = "ap-southeast-1"
+  }
+
   required_providers {
     aws = {
       source  = "hashicorp/aws"
