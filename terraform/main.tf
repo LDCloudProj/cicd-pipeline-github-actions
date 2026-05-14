@@ -93,18 +93,17 @@ resource "aws_instance" "main" {
   vpc_security_group_ids = [aws_security_group.main.id]
    key_name               = "lance-cicd-keypair"
 
-  user_data = <<-EOF
-    #!/bin/bash
-    yum update -y
-    yum install -y docker
-    systemctl start docker
-    systemctl enable docker
-    usermod -aG docker ec2-user
-    aws ecr get-login-password --region ${var.aws_region} | docker login --username AWS --password-stdin ${aws_ecr_repository.main.repository_url}
-    docker pull ${aws_ecr_repository.main.repository_url}:latest
-    docker run -d -p 5000:5000 ${aws_ecr_repository.main.repository_url}:latest
-  EOF
-
+user_data = <<-EOF
+  #!/bin/bash
+  apt-get update -y
+  apt-get install -y docker.io
+  systemctl start docker
+  systemctl enable docker
+  usermod -aG docker ubuntu
+  aws ecr get-login-password --region ${var.aws_region} | docker login --username AWS --password-stdin ${aws_ecr_repository.main.repository_url}
+  docker pull ${aws_ecr_repository.main.repository_url}:latest
+  docker run -d -p 5000:5000 ${aws_ecr_repository.main.repository_url}:latest
+EOF
   tags = {
     Name = "${var.project_name}-ec2"
   }
