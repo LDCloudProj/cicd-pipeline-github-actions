@@ -84,6 +84,7 @@ resource "aws_instance" "main" {
   instance_type          = var.instance_type
   iam_instance_profile   = aws_iam_instance_profile.ec2_profile.name
   vpc_security_group_ids = [aws_security_group.main.id]
+   key_name               = "EC2NEWKEYPAIR"
 
   user_data = <<-EOF
     #!/bin/bash
